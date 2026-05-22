@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UNIVIBE — Artist Archive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Azeret+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper:    #f3efe5;
+  --paper-2:  #e9e4d8;
+  --paper-3:  #ddd8cb;
+  --ink:      #111010;
+  --red:      #b5201a;
+  --amber:    #aa6e0a;
+  --muted:    #7a7265;
+  --rule:     #cac5b7;
+  --f-d: 'Syne', sans-serif;
+  --f-m: 'Azeret Mono', 'Courier New', monospace;
+  --f-b: 'Barlow', system-ui, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--f-b);
+  font-size: 15px;
+  line-height: 1.55;
+  min-height: 100vh;
+  padding-bottom: 100px;
+  position: relative;
+  zoom: 1.25;
+}
+
+/* grain texture */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 220px 220px;
+  opacity: 0.038;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.page {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+/* ── Header ─────────────────────────────── */
+header {
+  padding: 56px 0 36px;
+  border-bottom: 2px solid var(--ink);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  animation: up 0.55s ease both;
+}
+
+.logo-wrap {}
+.logo {
+  font-family: var(--f-d);
+  font-weight: 800;
+  font-size: clamp(3rem, 8.5vw, 5.8rem);
+  letter-spacing: -3px;
+  line-height: 0.88;
+  color: var(--ink);
+}
+.logo-dot { color: var(--red); }
+.logo-tag {
+  font-family: var(--f-m);
+  font-size: 0.62rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 10px;
+}
+
+.header-stamp {
+  font-family: var(--f-m);
+  font-size: 0.58rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  border: 1px solid var(--rule);
+  padding: 6px 10px;
+  text-align: right;
+  line-height: 1.8;
+  flex-shrink: 0;
+}
+
+/* ── Sections ────────────────────────────── */
+section {
+  border-bottom: 1px solid var(--rule);
+  padding: 30px 0;
+  animation: up 0.55s ease both;
+}
+section:nth-of-type(1) { animation-delay: 0.08s; }
+section:nth-of-type(2) { animation-delay: 0.16s; }
+section:nth-of-type(3) { animation-delay: 0.24s; }
+#actionSection { animation-delay: 0.32s; }
+
+@keyframes up {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.sec-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+.sec-num {
+  font-family: var(--f-m);
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: var(--red);
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+.sec-title {
+  font-family: var(--f-m);
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  color: var(--ink);
+}
+.sec-badge {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--f-m);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--muted);
+  cursor: pointer;
+  user-select: none;
+  padding: 3px 0;
+}
+.sec-badge:hover { color: var(--ink); }
+.pip {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--rule);
+  flex-shrink: 0;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.pip.on {
+  background: var(--amber);
+  box-shadow: 0 0 0 3px rgba(170, 110, 10, 0.15);
+}
+
+/* ── Credentials ─────────────────────────── */
+.cred-body {
+  display: none;
+  border-left: 2px solid var(--paper-3);
+  padding-left: 18px;
+  animation: up 0.2s ease both;
+}
+.cred-body.open { display: block; }
+.cred-toggle { cursor: pointer; }
+.cred-toggle .sec-head { cursor: pointer; }
+
+/* ── Form ────────────────────────────────── */
+.field { margin-bottom: 20px; }
+.field-label {
+  font-family: var(--f-m);
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--muted);
+  margin-bottom: 7px;
+}
+
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px solid var(--rule);
+  color: var(--ink);
+  font-family: var(--f-m);
+  font-size: 0.83rem;
+  padding: 8px 0;
+  outline: none;
+  transition: border-color 0.15s;
+  caret-color: var(--red);
+}
+input:focus { border-bottom-color: var(--ink); }
+input::placeholder { color: var(--paper-3); }
+
+/* ── Buttons ─────────────────────────────── */
+.btn {
+  font-family: var(--f-m);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  padding: 11px 22px;
+  border: 1.5px solid var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+  cursor: pointer;
+  border-radius: 0;
+  transition: background 0.12s, color 0.12s;
+  white-space: nowrap;
+}
+.btn:hover:not(:disabled) { background: var(--paper); color: var(--ink); }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn.ghost:hover:not(:disabled) { background: var(--ink); color: var(--paper); }
+.btn.sm { padding: 8px 18px; font-size: 0.62rem; }
+.btn:disabled { opacity: 0.28; cursor: not-allowed; }
+
+.btn-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+/* ── Search ──────────────────────────────── */
+.search-row {
+  display: flex;
+  gap: 14px;
+  align-items: flex-end;
+  margin-bottom: 0;
+}
+.search-row .field { flex: 1; margin-bottom: 0; }
+
+/* ── Artist list ─────────────────────────── */
+.artist-list { margin-top: 0; }
+
+.a-row {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 11px 0 11px 10px;
+  border-top: 1px solid var(--rule);
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: border-left-color 0.12s, background 0.08s;
+  margin: 0 -28px 0 -13px;
+  padding-left: 13px;
+  padding-right: 28px;
+}
+.a-row:last-child { border-bottom: 1px solid var(--rule); }
+.a-row:hover { background: var(--paper-2); }
+.a-row.sel {
+  border-left-color: var(--red);
+  background: var(--paper-2);
+}
+
+.a-idx {
+  font-family: var(--f-m);
+  font-size: 0.58rem;
+  color: var(--muted);
+  width: 16px;
+  text-align: right;
+  flex-shrink: 0;
+}
+.a-img, .a-av {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.a-img { object-fit: cover; background: var(--paper-3); }
+.a-av {
+  background: var(--paper-3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+}
+.a-name {
+  flex: 1;
+  font-weight: 600;
+  font-size: 0.9rem;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.a-row.sel .a-name { color: var(--red); }
+.a-uri {
+  font-family: var(--f-m);
+  font-size: 0.58rem;
+  color: var(--muted);
+  flex-shrink: 0;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Actions ─────────────────────────────── */
+#actionSection { display: none; }
+#actionSection.show { display: block; animation: up 0.35s ease both; }
+
+.sel-name {
+  font-family: var(--f-d);
+  font-weight: 800;
+  font-size: clamp(1.8rem, 4.5vw, 3rem);
+  letter-spacing: -1.5px;
+  line-height: 1.0;
+  margin-bottom: 7px;
+}
+.sel-meta {
+  font-family: var(--f-m);
+  font-size: 0.63rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  margin-bottom: 24px;
+}
+
+/* ── Status ──────────────────────────────── */
+.status {
+  font-family: var(--f-m);
+  font-size: 0.72rem;
+  margin-top: 18px;
+  padding: 10px 14px;
+  border-left: 2.5px solid transparent;
+  display: none;
+  letter-spacing: 0.3px;
+}
+.status.ok   { border-left-color: var(--amber);  background: rgba(170,110,10,.06); color: var(--amber); display: block; }
+.status.err  { border-left-color: var(--red);    background: rgba(181,32,26,.06);  color: var(--red);   display: block; }
+.status.load { border-left-color: var(--rule);   background: var(--paper-2);       color: var(--muted); display: block; }
+
+.inline-msg {
+  font-family: var(--f-m);
+  font-size: 0.68rem;
+  color: var(--muted);
+  padding: 18px 0 6px;
+}
+.inline-msg.err { color: var(--red); }
+
+/* ── Spinner ─────────────────────────────── */
+.sp-wrap { display: inline-flex; align-items: center; gap: 8px; }
+.sp {
+  display: inline-block;
+  width: 10px; height: 10px;
+  border: 1.5px solid var(--paper-3);
+  border-top-color: var(--muted);
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <header>
+    <div class="logo-wrap">
+      <div class="logo">UNI<span class="logo-dot">V</span>IBE</div>
+      <div class="logo-tag">Spotify Artist Archive Tool</div>
+    </div>
+    <div class="header-stamp" id="headerStamp">
+      Status<br>—<br>IDLE
+    </div>
+  </header>
+
+  <!-- 01 Credentials -->
+  <section class="cred-toggle" onclick="toggleCreds()">
+    <div class="sec-head">
+      <span class="sec-num">01</span>
+      <span class="sec-title">Credentials</span>
+      <span class="sec-badge" id="credBadge">
+        <span class="pip" id="credPip"></span>
+        <span id="credLabel">NOT SET</span>
+      </span>
+    </div>
+    <div class="cred-body" id="credBody" onclick="event.stopPropagation()">
+      <div class="field">
+        <div class="field-label">Client ID</div>
+        <input type="text" id="clientId" placeholder="From Spotify Developer Dashboard">
+      </div>
+      <div class="field">
+        <div class="field-label">Client Secret</div>
+        <input type="password" id="clientSecret" placeholder="••••••••••••••••••••••••••••••••">
+      </div>
+      <button class="btn sm" onclick="saveConfig()">Authorise</button>
+    </div>
+  </section>
+
+  <!-- 02 Select Artist -->
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">02</span>
+      <span class="sec-title">Select Artist</span>
+    </div>
+    <div class="search-row">
+      <div class="field">
+        <div class="field-label">Artist Name</div>
+        <input type="text" id="q" placeholder="藝人名稱 或 貼上 Spotify 藝人連結…"
+               onkeydown="if(event.key==='Enter') doSearch()">
+      </div>
+      <button class="btn sm" id="searchBtn" onclick="doSearch()">Search</button>
+    </div>
+    <div id="artistList" class="artist-list"></div>
+  </section>
+
+  <!-- 03 Collect -->
+  <section id="actionSection">
+    <div class="sec-head">
+      <span class="sec-num">03</span>
+      <span class="sec-title">Collect</span>
+    </div>
+    <div class="sel-name" id="selName">—</div>
+    <div class="sel-meta" id="selMeta">Select an artist above</div>
+    <div class="btn-row">
+      <button class="btn" id="fetchBtn" onclick="doFetch()">Fetch All</button>
+      <button class="btn ghost" id="updateBtn" onclick="doUpdate()" disabled>Update</button>
+    </div>
+    <div class="status" id="statusMsg"></div>
+  </section>
+
+</div>
+
+<script>
+let sel = null;
+let credsOpen = false;
+
+/* ── Init ─────────────────────────────── */
+async function init() {
+  try {
+    const r = await fetch('/config/status');
+    if (!r.ok) return;
+    const d = await r.json();
+    setCredBadge(d.configured);
+    if (!d.configured) openCreds();
+  } catch { /* backend not yet up */ }
+}
+
+/* ── Credentials ─────────────────────── */
+function setCredBadge(ok) {
+  document.getElementById('credPip').className = ok ? 'pip on' : 'pip';
+  document.getElementById('credLabel').textContent = ok ? 'ACTIVE' : 'NOT SET';
+  setStamp(ok ? 'AUTH\nOK' : 'AUTH\n—');
+}
+
+function setStamp(txt) {
+  document.getElementById('headerStamp').innerHTML =
+    'Status<br>—<br>' + txt.replace('\n','<br>');
+}
+
+function openCreds() {
+  credsOpen = true;
+  document.getElementById('credBody').className = 'cred-body open';
+}
+
+function toggleCreds() {
+  credsOpen = !credsOpen;
+  document.getElementById('credBody').className = credsOpen ? 'cred-body open' : 'cred-body';
+}
+
+async function saveConfig() {
+  const id  = document.getElementById('clientId').value.trim();
+  const sec = document.getElementById('clientSecret').value.trim();
+  if (!id || !sec) return;
+  try {
+    const r = await fetch('/config', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ client_id: id, client_secret: sec }),
+    });
+    if (r.ok) {
+      setCredBadge(true);
+      toggleCreds();
+    } else {
+      const e = await r.json().catch(() => ({}));
+      alert('✕ ' + (e.detail || 'Invalid credentials'));
+    }
+  } catch { alert('✕ Network error'); }
+}
+
+/* ── Search ──────────────────────────── */
+function extractArtistId(input) {
+  // https://open.spotify.com/artist/4tZwfgrHOc3mvqYlEYSvVi?si=...
+  const m = input.match(/open\.spotify\.com\/artist\/([A-Za-z0-9]+)/);
+  return m ? m[1] : null;
+}
+
+async function doSearch() {
+  const raw = document.getElementById('q').value.trim();
+  if (!raw) return;
+  const btn = document.getElementById('searchBtn');
+  btn.disabled = true;
+
+  const artistId = extractArtistId(raw);
+  if (artistId) {
+    renderMsg('<span class="sp-wrap"><span class="sp"></span>Resolving artist…</span>', '');
+    try {
+      const r = await fetch(`/resolve/${artistId}`);
+      if (r.status === 401) { renderMsg('Set credentials first', 'err'); return; }
+      if (!r.ok) { renderMsg('找不到該藝人，請確認連結是否正確', 'err'); return; }
+      renderArtists([await r.json()]);
+    } catch { renderMsg('Network error', 'err'); }
+    finally { btn.disabled = false; }
+    return;
+  }
+
+  renderMsg('<span class="sp-wrap"><span class="sp"></span>Searching…</span>', '');
+  try {
+    const r = await fetch('/search?q=' + encodeURIComponent(raw));
+    if (r.status === 401) { renderMsg('Set credentials first', 'err'); return; }
+    if (!r.ok) {
+      const e = await r.json().catch(() => ({}));
+      renderMsg('Search error: ' + (e.detail || r.status), 'err');
+      return;
+    }
+    renderArtists(await r.json());
+  } catch { renderMsg('Network error — is the server running?', 'err'); }
+  finally { btn.disabled = false; }
+}
+
+function renderMsg(html, cls) {
+  document.getElementById('artistList').innerHTML =
+    `<div class="inline-msg ${cls}">${html}</div>`;
+}
+
+function renderArtists(list) {
+  const el = document.getElementById('artistList');
+  el.innerHTML = '';
+  if (!list.length) { renderMsg('No results found', 'err'); return; }
+  list.forEach((a, i) => {
+    const row = document.createElement('div');
+    row.className = 'a-row';
+    row.dataset.id = a.id;
+    row.innerHTML = `
+      <span class="a-idx">${pad(i+1)}</span>
+      ${a.image
+        ? `<img class="a-img" src="${a.image}" alt="">`
+        : `<div class="a-av">♪</div>`}
+      <span class="a-name">${esc(a.name)}</span>
+      <span class="a-uri">${a.id}</span>`;
+    row.addEventListener('click', () => selectArtist(a));
+    el.appendChild(row);
+  });
+}
+
+/* ── Artist selection ────────────────── */
+async function selectArtist(artist) {
+  sel = artist;
+  document.querySelectorAll('.a-row').forEach(r =>
+    r.classList.toggle('sel', r.dataset.id === artist.id)
+  );
+  document.getElementById('selName').textContent = artist.name;
+  document.getElementById('actionSection').className = 'show';
+  clearStatus();
+  await refreshMeta();
+}
+
+async function refreshMeta() {
+  if (!sel) return;
+  try {
+    const r = await fetch(`/artist/${sel.id}/status`);
+    if (!r.ok) return;
+    const s = await r.json();
+    const meta = document.getElementById('selMeta');
+    const upd  = document.getElementById('updateBtn');
+    if (s.last_fetched_at) {
+      meta.textContent = `Last archive: ${s.last_fetched_at} · ${s.track_count} tracks`;
+      upd.disabled = false;
+      setStamp(`${s.track_count}\nTRACKS`);
+    } else {
+      meta.textContent = 'Not yet archived';
+      upd.disabled = true;
+      setStamp('NOT\nARCHIVED');
+    }
+  } catch { /* ignore */ }
+}
+
+/* ── Collect ─────────────────────────── */
+async function doFetch()  { await run('/fetch'); }
+async function doUpdate() { await run('/update'); }
+
+async function run(ep) {
+  if (!sel) return;
+  const fb = document.getElementById('fetchBtn');
+  const ub = document.getElementById('updateBtn');
+  fb.disabled = ub.disabled = true;
+  setStatus('Connecting…', 'load');
+  setStamp('WORK\nING…');
+
+  const startMs = Date.now();
+  let pollTimer = setInterval(async () => {
+    try {
+      const pr = await fetch(`/fetch-progress/${sel.id}`);
+      if (!pr.ok) return;
+      const p = await pr.json();
+      if (!p || !p.phase) return;
+
+      if (p.phase === 'listing') {
+        const found = p.albums_found || 0;
+        setStatus(`Fetching release list… (${found} found)`, 'load');
+        setStamp(`${found}\nFOUND`);
+        return;
+      }
+
+      if (p.phase === 'albums' && !p.albums_total) {
+        setStatus('Preparing…', 'load');
+        return;
+      }
+
+      const done = p.albums_done || 0;
+      const total = p.albums_total || 0;
+      const tracks = p.tracks || 0;
+
+      let line = '';
+      if (p.phase === 'isrc') {
+        line = `Albums: ${total}/${total} · Tracks: ${tracks} · Fetching details…`;
+      } else {
+        line = `Albums: ${done}/${total} · Tracks: ${tracks}`;
+        if (done > 0 && done < total) {
+          const elapsed = Date.now() - startMs;
+          const remaining = Math.round((elapsed / done) * (total - done) / 1000);
+          line += ` · ~${remaining}s left`;
+        }
+      }
+      setStatus(line, 'load');
+      setStamp(`${done}/${total}\nALBUMS`);
+    } catch { /* ignore poll errors */ }
+  }, 1000);
+
+  try {
+    const r = await fetch(ep, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ artist_id: sel.id, artist_name: sel.name }),
+    });
+    clearInterval(pollTimer);
+    if (!r.ok) {
+      const e = await r.json().catch(() => ({}));
+      setStatus('Error: ' + (e.detail || 'Unknown error — check server logs'), 'err');
+      setStamp('ERR\n✕');
+      return;
+    }
+    const total = r.headers.get('X-Track-Count');
+    const added = r.headers.get('X-New-Count');
+    const blob  = await r.blob();
+    triggerDownload(blob, `${sel.name}_all_tracks.csv`);
+
+    let msg = `↓  ${total} tracks archived`;
+    if (added !== null) msg += `  ·  ${added} new`;
+    setStatus(msg, 'ok');
+    await refreshMeta();
+  } catch {
+    clearInterval(pollTimer);
+    setStatus('Network error — is the server running?', 'err');
+    setStamp('ERR\n✕');
+  } finally {
+    clearInterval(pollTimer);
+    fb.disabled = false;
+    await refreshMeta();
+  }
+}
+
+function triggerDownload(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+/* ── Status ──────────────────────────── */
+function setStatus(txt, cls) {
+  const el = document.getElementById('statusMsg');
+  el.className = 'status ' + cls;
+  el.innerHTML = cls === 'load'
+    ? `<span class="sp-wrap"><span class="sp"></span>${txt}</span>`
+    : txt;
+}
+function clearStatus() {
+  const el = document.getElementById('statusMsg');
+  el.className = 'status';
+  el.innerHTML = '';
+}
+
+/* ── Utilities ───────────────────────── */
+function esc(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function fmt(n) {
+  if (n >= 1e6) return (n/1e6).toFixed(1) + 'M';
+  if (n >= 1e3) return Math.round(n/1e3) + 'K';
+  return n;
+}
+function pad(n) { return String(n).padStart(2, '0'); }
+
+init();
+</script>
+</body>
+</html>
