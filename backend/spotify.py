@@ -1,11 +1,22 @@
+import logging
 import time
 from typing import Callable
+
 import httpx
 
 ACCOUNTS_URL = "https://accounts.spotify.com/api/token"
 API_BASE = "https://api.spotify.com/v1"
 
+# Module-level token cache shared across all requests within a process lifetime.
 _token_cache: dict = {}
+
+_REQUEST_INTERVAL = 0.2      # proactive throttle: ~5 req/s within Spotify's 30s window
+_MAX_RETRIES = 8
+_ALBUMS_PAGE_LIMIT = 10      # Spotify Dev Mode hard cap; limit=50 returns HTTP 400
+_TRACKS_PAGE_LIMIT = 50
+_RATE_LIMIT_ABORT_SECS = 300 # abort instead of sleeping if Retry-After exceeds this
+
+logger = logging.getLogger(__name__)
 
 
 def get_token(client_id: str, client_secret: str) -> str:
@@ -41,7 +52,7 @@ def get_artist(token: str, artist_id: str) -> dict:
 
 
 def search_artist(token: str, query: str) -> list[dict]:
-    # Spotify Development Mode no longer returns followers/popularity in artist objects
+    # Dev Mode: followers/popularity/genres are not returned in artist objects.
     resp = httpx.get(
         f"{API_BASE}/search",
         params={"q": query, "type": "artist", "limit": 5},
@@ -70,18 +81,19 @@ def _normalize_date(d: str) -> str:
     return d
 
 
-_REQUEST_INTERVAL = 0.2  # proactive throttle: ~5 req/s within 30s window
-
-
 def _get(token: str, url: str, params: dict | None = None) -> httpx.Response:
     """GET with proactive throttle + automatic 429 retry (Retry-After)."""
     headers = {"Authorization": f"Bearer {token}"}
-    for _ in range(8):
+    for _ in range(_MAX_RETRIES):
         resp = httpx.get(url, params=params, headers=headers, timeout=20)
         if resp.status_code == 429:
             wait = int(resp.headers.get("Retry-After", 5))
-            if wait > 300:
-                raise RuntimeError(f"Spotify rate limit 過長（{wait}s / {wait//3600:.1f}h）— 請建立新的 Spotify App 或等待後再試")
+            if wait > _RATE_LIMIT_ABORT_SECS:
+                raise RuntimeError(
+                    f"Spotify rate limit 過長（{wait}s / {wait // 3600:.1f}h）"
+                    " — 請建立新的 Spotify App 或等待後再試"
+                )
+            logger.warning("429 rate limited — sleeping %ds", wait)
             time.sleep(wait)
             continue  # params unchanged — retry with same arguments
         time.sleep(_REQUEST_INTERVAL)
@@ -90,6 +102,7 @@ def _get(token: str, url: str, params: dict | None = None) -> httpx.Response:
 
 
 def _paginate(token: str, url: str, params: dict) -> list[dict]:
+    """Paginate a Spotify endpoint that returns a Paging object with 'items'."""
     items: list[dict] = []
     while url:
         resp = _get(token, url, params)
@@ -108,7 +121,9 @@ def _batch_full_tracks(token: str, track_ids: list[str]) -> dict[str, dict]:
         batch = track_ids[i : i + 50]
         resp = _get(token, f"{API_BASE}/tracks", {"ids": ",".join(batch)})
         if not resp.is_success:
-            return {}  # ISRC unavailable in this API tier — degrade gracefully
+            # ISRC fetch is best-effort; Dev Mode may restrict /v1/tracks.
+            logger.warning("ISRC batch fetch failed (status=%d) — ISRC fields will be empty", resp.status_code)
+            return {}
         for tr in resp.json().get("tracks", []):
             if tr:
                 result[tr["id"]] = tr
@@ -123,12 +138,17 @@ def get_all_tracks(
 ) -> list[dict]:
     """
     Fetch all tracks for an artist across albums, singles, and compilations.
+
     since_date: ISO date (YYYY-MM-DD). When set, skips albums released before this date.
-    on_progress: optional callback(dict) called after each album is processed.
+    on_progress: optional callback(dict) fired after each step for UI progress reporting.
+      Phases: "listing" (album list pagination), "albums" (track fetch), "isrc" (ISRC fetch).
+
+    Albums use a manual pagination loop (not _paginate) so on_progress can fire after
+    each page during the listing phase before the total is known.
     """
     albums: list[dict] = []
-    url = f"{API_BASE}/artists/{artist_id}/albums"
-    params: dict = {"include_groups": "album,single,compilation", "limit": 10}
+    url: str | None = f"{API_BASE}/artists/{artist_id}/albums"
+    params: dict = {"include_groups": "album,single,compilation", "limit": _ALBUMS_PAGE_LIMIT}
     while url:
         resp = _get(token, url, params)
         resp.raise_for_status()
@@ -152,7 +172,7 @@ def get_all_tracks(
     raw: list[dict] = []
     for i, album in enumerate(albums):
         tracks = _paginate(
-            token, f"{API_BASE}/albums/{album['id']}/tracks", {"limit": 50}
+            token, f"{API_BASE}/albums/{album['id']}/tracks", {"limit": _TRACKS_PAGE_LIMIT}
         )
         release = _normalize_date(album.get("release_date", ""))
         for t in tracks:

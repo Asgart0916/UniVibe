@@ -44,7 +44,7 @@ copy .env.example .env
 
 # 3. Run
 python backend/main.py
-# Open http://localhost:8000 in your browser
+# Open http://127.0.0.1:8000 in your browser
 ```
 
 ### Getting Spotify API credentials
@@ -52,7 +52,7 @@ python backend/main.py
 1. Go to [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
 2. Log in with your Spotify account (free account works)
 3. Click **Create app**
-4. Fill in any name/description; set Redirect URI to `http://localhost:8000`
+4. Fill in any name/description; set Redirect URI to `http://127.0.0.1:8000` — Spotify 自 2025/4/9 起禁止 `localhost`，須用明確 IP
 5. Copy the **Client ID** and **Client Secret** into your `.env` file
 
 ## Tech stack
@@ -65,15 +65,20 @@ python backend/main.py
 | State | `~/.univibe/state.json` |
 | Packaging | PyInstaller (standalone `.exe` for Windows) |
 
+## Security note
+
+Your Spotify credentials are stored in plaintext at `~/.univibe/state.json`.
+This is intentional for a local single-user tool — do not run this backend on a shared or public server.
+
 ## Roadmap
 
 - [x] Project scaffold & documentation
-- [ ] Spotify API module (artist search, album/track fetch)
-- [ ] Deduplication logic & CSV export
-- [ ] Incremental update (state management)
-- [ ] FastAPI routes
-- [ ] Frontend UI
-- [ ] PyInstaller packaging
+- [x] Spotify API module (artist search, album/track fetch)
+- [x] Deduplication logic & CSV export
+- [x] Incremental update (state management)
+- [x] FastAPI routes
+- [x] Frontend UI
+- [ ] PyInstaller packaging (standalone `.exe`)
 
 ## License
 
