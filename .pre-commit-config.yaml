@@ -1,0 +1,19 @@
+repos:
+  - repo: local
+    hooks:
+      - id: ruff
+        name: ruff check
+        entry: .venv/Scripts/ruff.exe check
+        language: system
+        types: [python]
+      - id: mypy
+        name: mypy
+        entry: .venv/Scripts/python.exe -m mypy --ignore-missing-imports
+        language: system
+        types: [python]
+      - id: pytest
+        name: pytest
+        entry: .venv/Scripts/python.exe -m pytest backend/tests/
+        language: system
+        pass_filenames: false
+        always_run: true
