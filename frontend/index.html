@@ -9,21 +9,20 @@
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Azeret+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --paper:    #f3efe5;
-  --paper-2:  #e9e4d8;
-  --paper-3:  #ddd8cb;
-  --ink:      #111010;
-  --red:      #b5201a;
-  --amber:    #aa6e0a;
-  --muted:    #7a7265;
-  --rule:     #cac5b7;
+  --paper:  #f3efe5;
+  --paper-2:#e9e4d8;
+  --paper-3:#ddd8cb;
+  --ink:    #111010;
+  --red:    #b5201a;
+  --amber:  #aa6e0a;
+  --green:  #2a7a3b;
+  --muted:  #7a7265;
+  --rule:   #cac5b7;
   --f-d: 'Syne', sans-serif;
   --f-m: 'Azeret Mono', 'Courier New', monospace;
   --f-b: 'Barlow', system-ui, sans-serif;
 }
-
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 body {
   background: var(--paper);
   color: var(--ink);
@@ -35,8 +34,6 @@ body {
   position: relative;
   zoom: 1.25;
 }
-
-/* grain texture */
 body::after {
   content: '';
   position: fixed;
@@ -47,14 +44,9 @@ body::after {
   pointer-events: none;
   z-index: 9999;
 }
+.page { max-width: 680px; margin: 0 auto; padding: 0 28px; }
 
-.page {
-  max-width: 680px;
-  margin: 0 auto;
-  padding: 0 28px;
-}
-
-/* ── Header ─────────────────────────────── */
+/* ── Header ── */
 header {
   padding: 56px 0 36px;
   border-bottom: 2px solid var(--ink);
@@ -64,26 +56,9 @@ header {
   gap: 20px;
   animation: up 0.55s ease both;
 }
-
-.logo-wrap {}
-.logo {
-  font-family: var(--f-d);
-  font-weight: 800;
-  font-size: clamp(3rem, 8.5vw, 5.8rem);
-  letter-spacing: -3px;
-  line-height: 0.88;
-  color: var(--ink);
-}
+.logo { font-family: var(--f-d); font-weight: 800; font-size: clamp(3rem,8.5vw,5.8rem); letter-spacing: -3px; line-height: 0.88; }
 .logo-dot { color: var(--red); }
-.logo-tag {
-  font-family: var(--f-m);
-  font-size: 0.62rem;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-top: 10px;
-}
-
+.logo-tag { font-family: var(--f-m); font-size: 0.62rem; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-top: 10px; }
 .header-stamp {
   font-family: var(--f-m);
   font-size: 0.58rem;
@@ -97,299 +72,136 @@ header {
   flex-shrink: 0;
 }
 
-/* ── Sections ────────────────────────────── */
+/* ── Sections ── */
 section {
   border-bottom: 1px solid var(--rule);
   padding: 30px 0;
   animation: up 0.55s ease both;
 }
-section:nth-of-type(1) { animation-delay: 0.08s; }
-section:nth-of-type(2) { animation-delay: 0.16s; }
-section:nth-of-type(3) { animation-delay: 0.24s; }
-#actionSection { animation-delay: 0.32s; }
+section:nth-of-type(1){animation-delay:0.08s}
+section:nth-of-type(2){animation-delay:0.16s}
+section:nth-of-type(3){animation-delay:0.24s}
+#actionSection{animation-delay:0.32s}
+@keyframes up { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
 
-@keyframes up {
-  from { opacity: 0; transform: translateY(14px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.sec-head {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 22px;
-}
-.sec-num {
-  font-family: var(--f-m);
-  font-size: 0.6rem;
-  font-weight: 700;
-  color: var(--red);
-  letter-spacing: 0.5px;
-  flex-shrink: 0;
-}
-.sec-title {
-  font-family: var(--f-m);
-  font-size: 0.65rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 2.5px;
-  color: var(--ink);
-}
+.sec-head { display:flex; align-items:center; gap:12px; margin-bottom:22px; }
+.sec-num { font-family:var(--f-m); font-size:0.6rem; font-weight:700; color:var(--red); letter-spacing:0.5px; flex-shrink:0; }
+.sec-title { font-family:var(--f-m); font-size:0.65rem; font-weight:700; text-transform:uppercase; letter-spacing:2.5px; }
 .sec-badge {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-family: var(--f-m);
-  font-size: 0.6rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--muted);
-  cursor: pointer;
-  user-select: none;
-  padding: 3px 0;
+  margin-left:auto;
+  display:flex; align-items:center; gap:6px;
+  font-family:var(--f-m); font-size:0.6rem; text-transform:uppercase; letter-spacing:1px;
+  color:var(--muted);
 }
-.sec-badge:hover { color: var(--ink); }
-.pip {
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  background: var(--rule);
-  flex-shrink: 0;
-  transition: background 0.2s, box-shadow 0.2s;
-}
-.pip.on {
-  background: var(--amber);
-  box-shadow: 0 0 0 3px rgba(170, 110, 10, 0.15);
-}
+.pip { width:7px; height:7px; border-radius:50%; background:var(--rule); flex-shrink:0; transition:background 0.2s,box-shadow 0.2s; }
+.pip.on  { background:var(--amber);  box-shadow:0 0 0 3px rgba(170,110,10,.15); }
+.pip.ok  { background:var(--green);  box-shadow:0 0 0 3px rgba(42,122,59,.15); }
 
-/* ── Credentials ─────────────────────────── */
-.cred-body {
-  display: none;
-  border-left: 2px solid var(--paper-3);
-  padding-left: 18px;
-  animation: up 0.2s ease both;
-}
-.cred-body.open { display: block; }
-.cred-toggle { cursor: pointer; }
-.cred-toggle .sec-head { cursor: pointer; }
-
-/* ── Form ────────────────────────────────── */
+/* ── Form ── */
 .field { margin-bottom: 20px; }
-.field-label {
-  font-family: var(--f-m);
-  font-size: 0.58rem;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: var(--muted);
-  margin-bottom: 7px;
-}
-
-input[type="text"],
-input[type="password"] {
-  width: 100%;
-  background: transparent;
-  border: none;
-  border-bottom: 1.5px solid var(--rule);
-  color: var(--ink);
-  font-family: var(--f-m);
-  font-size: 0.83rem;
-  padding: 8px 0;
-  outline: none;
-  transition: border-color 0.15s;
-  caret-color: var(--red);
+.field-label { font-family:var(--f-m); font-size:0.58rem; text-transform:uppercase; letter-spacing:2px; color:var(--muted); margin-bottom:7px; }
+input[type="text"] {
+  width:100%; background:transparent; border:none; border-bottom:1.5px solid var(--rule);
+  color:var(--ink); font-family:var(--f-m); font-size:0.83rem; padding:8px 0; outline:none;
+  transition:border-color 0.15s; caret-color:var(--red);
 }
 input:focus { border-bottom-color: var(--ink); }
 input::placeholder { color: var(--paper-3); }
 
-/* ── Buttons ─────────────────────────────── */
+/* ── Buttons ── */
 .btn {
-  font-family: var(--f-m);
-  font-size: 0.68rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 2.5px;
-  padding: 11px 22px;
-  border: 1.5px solid var(--ink);
-  background: var(--ink);
-  color: var(--paper);
-  cursor: pointer;
-  border-radius: 0;
-  transition: background 0.12s, color 0.12s;
-  white-space: nowrap;
+  font-family:var(--f-m); font-size:0.68rem; font-weight:700; text-transform:uppercase;
+  letter-spacing:2.5px; padding:11px 22px; border:1.5px solid var(--ink);
+  background:var(--ink); color:var(--paper); cursor:pointer; border-radius:0;
+  transition:background 0.12s,color 0.12s; white-space:nowrap;
 }
-.btn:hover:not(:disabled) { background: var(--paper); color: var(--ink); }
-.btn.ghost { background: transparent; color: var(--ink); }
-.btn.ghost:hover:not(:disabled) { background: var(--ink); color: var(--paper); }
-.btn.sm { padding: 8px 18px; font-size: 0.62rem; }
-.btn:disabled { opacity: 0.28; cursor: not-allowed; }
+.btn:hover:not(:disabled){ background:var(--paper); color:var(--ink); }
+.btn.ghost { background:transparent; color:var(--ink); }
+.btn.ghost:hover:not(:disabled){ background:var(--ink); color:var(--paper); }
+.btn.sm { padding:8px 18px; font-size:0.62rem; }
+.btn.danger { border-color:var(--red); background:transparent; color:var(--red); }
+.btn.danger:hover:not(:disabled){ background:var(--red); color:var(--paper); }
+.btn:disabled { opacity:0.28; cursor:not-allowed; }
+.btn-row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
 
-.btn-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+/* ── Setup section ── */
+.setup-body { border-left:2px solid var(--paper-3); padding-left:18px; }
+.setup-hint { font-family:var(--f-m); font-size:0.63rem; color:var(--muted); margin-bottom:20px; line-height:1.8; }
+.setup-hint a { color:var(--ink); }
+.setup-hint code { background:var(--paper-2); padding:1px 5px; font-size:0.7em; }
+.logout-link { font-family:var(--f-m); font-size:0.58rem; color:var(--muted); text-decoration:underline; cursor:pointer; background:none; border:none; padding:0; margin-left:10px; }
+.logout-link:hover { color:var(--red); }
 
-/* ── Search ──────────────────────────────── */
-.search-row {
-  display: flex;
-  gap: 14px;
-  align-items: flex-end;
-  margin-bottom: 0;
-}
-.search-row .field { flex: 1; margin-bottom: 0; }
+/* ── Search ── */
+.search-row { display:flex; gap:14px; align-items:flex-end; }
+.search-row .field { flex:1; margin-bottom:0; }
 
-/* ── Artist list ─────────────────────────── */
-.artist-list { margin-top: 0; }
-
+/* ── Artist list ── */
+.artist-list { margin-top:0; }
 .a-row {
-  display: flex;
-  align-items: center;
-  gap: 13px;
-  padding: 11px 0 11px 10px;
-  border-top: 1px solid var(--rule);
-  cursor: pointer;
-  border-left: 3px solid transparent;
-  transition: border-left-color 0.12s, background 0.08s;
-  margin: 0 -28px 0 -13px;
-  padding-left: 13px;
-  padding-right: 28px;
+  display:flex; align-items:center; gap:13px;
+  padding:11px 28px 11px 13px;
+  border-top:1px solid var(--rule);
+  cursor:pointer;
+  border-left:3px solid transparent;
+  transition:border-left-color 0.12s, background 0.08s;
+  margin:0 -28px 0 -13px;
 }
-.a-row:last-child { border-bottom: 1px solid var(--rule); }
-.a-row:hover { background: var(--paper-2); }
-.a-row.sel {
-  border-left-color: var(--red);
-  background: var(--paper-2);
-}
+.a-row:last-child { border-bottom:1px solid var(--rule); }
+.a-row:hover { background:var(--paper-2); }
+.a-row.sel { border-left-color:var(--red); background:var(--paper-2); }
+.a-idx { font-family:var(--f-m); font-size:0.58rem; color:var(--muted); width:16px; text-align:right; flex-shrink:0; }
+.a-img, .a-av { width:36px; height:36px; border-radius:50%; flex-shrink:0; }
+.a-img { object-fit:cover; background:var(--paper-3); }
+.a-av { background:var(--paper-3); display:flex; align-items:center; justify-content:center; font-size:1rem; }
+.a-name { flex:1; font-weight:600; font-size:0.9rem; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.a-row.sel .a-name { color:var(--red); }
+.a-uri { font-family:var(--f-m); font-size:0.58rem; color:var(--muted); flex-shrink:0; max-width:140px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
-.a-idx {
-  font-family: var(--f-m);
-  font-size: 0.58rem;
-  color: var(--muted);
-  width: 16px;
-  text-align: right;
-  flex-shrink: 0;
-}
-.a-img, .a-av {
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-.a-img { object-fit: cover; background: var(--paper-3); }
-.a-av {
-  background: var(--paper-3);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1rem;
-}
-.a-name {
-  flex: 1;
-  font-weight: 600;
-  font-size: 0.9rem;
-  min-width: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.a-row.sel .a-name { color: var(--red); }
-.a-uri {
-  font-family: var(--f-m);
-  font-size: 0.58rem;
-  color: var(--muted);
-  flex-shrink: 0;
-  max-width: 140px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+/* ── Actions ── */
+#actionSection { display:none; }
+#actionSection.show { display:block; animation:up 0.35s ease both; }
+.sel-name { font-family:var(--f-d); font-weight:800; font-size:clamp(1.8rem,4.5vw,3rem); letter-spacing:-1.5px; line-height:1.0; margin-bottom:7px; }
+.sel-meta { font-family:var(--f-m); font-size:0.63rem; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); margin-bottom:24px; }
 
-/* ── Actions ─────────────────────────────── */
-#actionSection { display: none; }
-#actionSection.show { display: block; animation: up 0.35s ease both; }
+/* ── Status ── */
+.status { font-family:var(--f-m); font-size:0.72rem; margin-top:18px; padding:10px 14px; border-left:2.5px solid transparent; display:none; letter-spacing:0.3px; }
+.status.ok   { border-left-color:var(--amber);  background:rgba(170,110,10,.06); color:var(--amber);  display:block; }
+.status.err  { border-left-color:var(--red);    background:rgba(181,32,26,.06);  color:var(--red);    display:block; }
+.status.load { border-left-color:var(--rule);   background:var(--paper-2);       color:var(--muted);  display:block; }
+.inline-msg { font-family:var(--f-m); font-size:0.68rem; color:var(--muted); padding:18px 0 6px; }
+.inline-msg.err { color:var(--red); }
 
-.sel-name {
-  font-family: var(--f-d);
-  font-weight: 800;
-  font-size: clamp(1.8rem, 4.5vw, 3rem);
-  letter-spacing: -1.5px;
-  line-height: 1.0;
-  margin-bottom: 7px;
-}
-.sel-meta {
-  font-family: var(--f-m);
-  font-size: 0.63rem;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  color: var(--muted);
-  margin-bottom: 24px;
-}
+/* ── Spinner ── */
+.sp-wrap { display:inline-flex; align-items:center; gap:8px; }
+.sp { display:inline-block; width:10px; height:10px; border:1.5px solid var(--paper-3); border-top-color:var(--muted); border-radius:50%; animation:spin 0.75s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
 
-/* ── Status ──────────────────────────────── */
-.status {
-  font-family: var(--f-m);
-  font-size: 0.72rem;
-  margin-top: 18px;
-  padding: 10px 14px;
-  border-left: 2.5px solid transparent;
-  display: none;
-  letter-spacing: 0.3px;
-}
-.status.ok   { border-left-color: var(--amber);  background: rgba(170,110,10,.06); color: var(--amber); display: block; }
-.status.err  { border-left-color: var(--red);    background: rgba(181,32,26,.06);  color: var(--red);   display: block; }
-.status.load { border-left-color: var(--rule);   background: var(--paper-2);       color: var(--muted); display: block; }
-
-.inline-msg {
-  font-family: var(--f-m);
-  font-size: 0.68rem;
-  color: var(--muted);
-  padding: 18px 0 6px;
-}
-.inline-msg.err { color: var(--red); }
-
-/* ── Spinner ─────────────────────────────── */
-.sp-wrap { display: inline-flex; align-items: center; gap: 8px; }
-.sp {
-  display: inline-block;
-  width: 10px; height: 10px;
-  border: 1.5px solid var(--paper-3);
-  border-top-color: var(--muted);
-  border-radius: 50%;
-  animation: spin 0.75s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
-.hidden { display: none !important; }
+.hidden { display:none !important; }
 </style>
 </head>
 <body>
 <div class="page">
 
-  <!-- Header -->
   <header>
-    <div class="logo-wrap">
+    <div>
       <div class="logo">UNI<span class="logo-dot">V</span>IBE</div>
       <div class="logo-tag">Spotify Artist Archive Tool</div>
     </div>
-    <div class="header-stamp" id="headerStamp">
-      Status<br>—<br>IDLE
-    </div>
+    <div class="header-stamp" id="headerStamp">Status<br>—<br>IDLE</div>
   </header>
 
-  <!-- 01 Credentials -->
-  <section class="cred-toggle" onclick="toggleCreds()">
+  <!-- 01 Setup -->
+  <section>
     <div class="sec-head">
       <span class="sec-num">01</span>
-      <span class="sec-title">Credentials</span>
-      <span class="sec-badge" id="credBadge">
-        <span class="pip" id="credPip"></span>
-        <span id="credLabel">NOT SET</span>
+      <span class="sec-title">Setup</span>
+      <span class="sec-badge" id="authBadge">
+        <span class="pip" id="authPip"></span>
+        <span id="authLabel">NOT SET</span>
       </span>
     </div>
-    <div class="cred-body" id="credBody" onclick="event.stopPropagation()">
-      <div class="field">
-        <div class="field-label">Client ID</div>
-        <input type="text" id="clientId" placeholder="From Spotify Developer Dashboard">
-      </div>
-      <div class="field">
-        <div class="field-label">Client Secret</div>
-        <input type="password" id="clientSecret" placeholder="••••••••••••••••••••••••••••••••">
-      </div>
-      <button class="btn sm" onclick="saveConfig()">Authorise</button>
-    </div>
+    <div id="setupBody"></div>
   </section>
 
   <!-- 02 Select Artist -->
@@ -400,9 +212,9 @@ input::placeholder { color: var(--paper-3); }
     </div>
     <div class="search-row">
       <div class="field">
-        <div class="field-label">Artist Name</div>
+        <div class="field-label">Artist Name or Spotify URL</div>
         <input type="text" id="q" placeholder="藝人名稱 或 貼上 Spotify 藝人連結…"
-               onkeydown="if(event.key==='Enter') doSearch()">
+               onkeydown="if(event.key==='Enter')doSearch()">
       </div>
       <button class="btn sm" id="searchBtn" onclick="doSearch()">Search</button>
     </div>
@@ -418,7 +230,7 @@ input::placeholder { color: var(--paper-3); }
     <div class="sel-name" id="selName">—</div>
     <div class="sel-meta" id="selMeta">Select an artist above</div>
     <div class="btn-row">
-      <button class="btn" id="fetchBtn" onclick="doFetch()">Fetch All</button>
+      <button class="btn"       id="fetchBtn"  onclick="doFetch()">Fetch All</button>
       <button class="btn ghost" id="updateBtn" onclick="doUpdate()" disabled>Update</button>
     </div>
     <div class="status" id="statusMsg"></div>
@@ -427,65 +239,360 @@ input::placeholder { color: var(--paper-3); }
 </div>
 
 <script>
-let sel = null;
-let credsOpen = false;
+/* ═══════════════════════════════════════════
+   Constants
+═══════════════════════════════════════════ */
+const REDIRECT_URI   = window.location.origin;
+const RL_INTERVAL_MS = 200;
+const RL_ABORT_SECS  = 300;
+const RL_MAX_RETRIES = 8;
 
-/* ── Init ─────────────────────────────── */
-async function init() {
-  try {
-    const r = await fetch('/config/status');
-    if (!r.ok) return;
-    const d = await r.json();
-    setCredBadge(d.configured);
-    if (!d.configured) openCreds();
-  } catch { /* backend not yet up */ }
+const K_CLIENT_ID = 'uv_client_id';
+const K_AUTH      = 'uv_auth';       // { access_token, refresh_token, expires_at }
+const K_VERIFIER  = 'uv_pkce_vrf';
+const K_STATE     = 'uv_pkce_state';
+const K_ARTISTS   = 'uv_artists';    // { [id]: { name, lastFetchedAt, tracks[] } }
+
+/* ═══════════════════════════════════════════
+   Utilities
+═══════════════════════════════════════════ */
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const esc   = s  => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const pad   = n  => String(n).padStart(2,'0');
+
+/* ═══════════════════════════════════════════
+   PKCE helpers
+═══════════════════════════════════════════ */
+function genRandom(len) {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  return Array.from(crypto.getRandomValues(new Uint8Array(len)))
+    .map(b => chars[b % chars.length]).join('');
 }
 
-/* ── Credentials ─────────────────────── */
-function setCredBadge(ok) {
-  document.getElementById('credPip').className = ok ? 'pip on' : 'pip';
-  document.getElementById('credLabel').textContent = ok ? 'ACTIVE' : 'NOT SET';
-  setStamp(ok ? 'AUTH\nOK' : 'AUTH\n—');
+async function pkceChallenge(verifier) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(verifier));
+  return btoa(String.fromCharCode(...new Uint8Array(buf)))
+    .replace(/=/g,'').replace(/\+/g,'-').replace(/\//g,'_');
 }
 
-function setStamp(txt) {
-  document.getElementById('headerStamp').innerHTML =
-    'Status<br>—<br>' + txt.replace('\n','<br>');
+/* ═══════════════════════════════════════════
+   Auth state
+═══════════════════════════════════════════ */
+const getClientId = ()  => localStorage.getItem(K_CLIENT_ID) || '';
+const setClientId = id  => localStorage.setItem(K_CLIENT_ID, id);
+
+const getAuth     = ()  => { const r = localStorage.getItem(K_AUTH); return r ? JSON.parse(r) : null; };
+const setAuth     = d   => localStorage.setItem(K_AUTH, JSON.stringify(d));
+const clearAuth   = ()  => localStorage.removeItem(K_AUTH);
+
+function isTokenValid() {
+  const a = getAuth();
+  return a && a.expires_at > Date.now() + 60_000;
 }
 
-function openCreds() {
-  credsOpen = true;
-  document.getElementById('credBody').className = 'cred-body open';
+async function getToken() {
+  if (isTokenValid()) return getAuth().access_token;
+  return doRefresh();
 }
 
-function toggleCreds() {
-  credsOpen = !credsOpen;
-  document.getElementById('credBody').className = credsOpen ? 'cred-body open' : 'cred-body';
+async function redirectToAuth() {
+  const clientId = getClientId();
+  const verifier  = genRandom(64);
+  const challenge = await pkceChallenge(verifier);
+  const state     = genRandom(16);
+  localStorage.setItem(K_VERIFIER, verifier);
+  localStorage.setItem(K_STATE,    state);
+
+  const url = new URL('https://accounts.spotify.com/authorize');
+  Object.entries({
+    response_type:         'code',
+    client_id:             clientId,
+    code_challenge_method: 'S256',
+    code_challenge:        challenge,
+    redirect_uri:          REDIRECT_URI,
+    state,
+  }).forEach(([k,v]) => url.searchParams.set(k,v));
+
+  window.location.href = url.toString();
 }
 
-async function saveConfig() {
-  const id  = document.getElementById('clientId').value.trim();
-  const sec = document.getElementById('clientSecret').value.trim();
-  if (!id || !sec) return;
-  try {
-    const r = await fetch('/config', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ client_id: id, client_secret: sec }),
-    });
-    if (r.ok) {
-      setCredBadge(true);
-      toggleCreds();
-    } else {
-      const e = await r.json().catch(() => ({}));
-      alert('✕ ' + (e.detail || 'Invalid credentials'));
+async function handleCallback(code, returnedState) {
+  const savedState = localStorage.getItem(K_STATE);
+  if (returnedState !== savedState) throw new Error('State mismatch — possible CSRF');
+  localStorage.removeItem(K_STATE);
+
+  const verifier = localStorage.getItem(K_VERIFIER);
+  if (!verifier) throw new Error('Code verifier missing');
+  localStorage.removeItem(K_VERIFIER);
+
+  const resp = await fetch('https://accounts.spotify.com/api/token', {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body:    new URLSearchParams({
+      grant_type:    'authorization_code',
+      code,
+      redirect_uri:  REDIRECT_URI,
+      client_id:     getClientId(),
+      code_verifier: verifier,
+    }),
+  });
+  if (!resp.ok) {
+    const e = await resp.json().catch(() => ({}));
+    throw new Error(e.error_description || `Token exchange failed (${resp.status})`);
+  }
+  const d = await resp.json();
+  setAuth({ access_token: d.access_token, refresh_token: d.refresh_token, expires_at: Date.now() + d.expires_in * 1000 });
+}
+
+async function doRefresh() {
+  const auth = getAuth();
+  if (!auth?.refresh_token) { clearAuth(); throw new Error('請重新登入'); }
+  const resp = await fetch('https://accounts.spotify.com/api/token', {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body:    new URLSearchParams({
+      grant_type:    'refresh_token',
+      refresh_token: auth.refresh_token,
+      client_id:     getClientId(),
+    }),
+  });
+  if (!resp.ok) { clearAuth(); throw new Error('Token 已過期，請重新登入'); }
+  const d = await resp.json();
+  setAuth({ access_token: d.access_token, refresh_token: d.refresh_token || auth.refresh_token, expires_at: Date.now() + d.expires_in * 1000 });
+  return d.access_token;
+}
+
+function logout() {
+  clearAuth();
+  localStorage.removeItem(K_VERIFIER);
+  localStorage.removeItem(K_STATE);
+  renderSetup();
+  setStamp('IDLE');
+}
+
+/* ═══════════════════════════════════════════
+   Spotify API client (rate-limited)
+═══════════════════════════════════════════ */
+let _rlLast = 0;
+
+async function apiFetch(token, urlOrPath, params = {}) {
+  const url = new URL(urlOrPath.startsWith('https://') ? urlOrPath : `https://api.spotify.com/v1${urlOrPath}`);
+  Object.entries(params).forEach(([k,v]) => url.searchParams.set(k,v));
+
+  for (let i = 0; i < RL_MAX_RETRIES; i++) {
+    const wait = RL_INTERVAL_MS - (Date.now() - _rlLast);
+    if (wait > 0) await sleep(wait);
+    _rlLast = Date.now();
+
+    const resp = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+
+    if (resp.status === 429) {
+      const after = parseInt(resp.headers.get('Retry-After') || '5');
+      if (after > RL_ABORT_SECS) throw new Error(`Spotify rate limit（${after}s / ${(after/3600).toFixed(1)}h）— 請稍後再試`);
+      await sleep(after * 1000);
+      continue;
     }
-  } catch { alert('✕ Network error'); }
+    if (!resp.ok) throw new Error(`Spotify API ${resp.status}: ${urlOrPath}`);
+    return resp.json();
+  }
+  throw new Error('Max retries exceeded');
 }
 
-/* ── Search ──────────────────────────── */
+async function searchArtist(token, query) {
+  const d = await apiFetch(token, '/search', { q: query, type: 'artist', limit: 5 });
+  return (d.artists.items || []).filter(Boolean).map(a => ({
+    id: a.id, name: a.name, image: a.images?.[0]?.url || null,
+  }));
+}
+
+async function resolveArtist(token, artistId) {
+  const a = await apiFetch(token, `/artists/${artistId}`);
+  return { id: a.id, name: a.name, image: a.images?.[0]?.url || null };
+}
+
+/* ═══════════════════════════════════════════
+   Core fetch logic
+═══════════════════════════════════════════ */
+function normalizeDate(d) {
+  if (!d) return '0000-01-01';
+  const p = d.split('-');
+  return p.length === 1 ? `${d}-01-01` : p.length === 2 ? `${d}-01` : d;
+}
+
+async function getAllTracks(token, artistId, onProgress, sinceDate = null) {
+  // 1. List all albums (paginated, limit=10 is Spotify's hard cap for this endpoint)
+  const albums = [];
+  let nextUrl = `/artists/${artistId}/albums`;
+  let params  = { include_groups: 'album,single,compilation', limit: 10 };
+  while (nextUrl) {
+    const d = await apiFetch(token, nextUrl, params);
+    albums.push(...d.items);
+    nextUrl = d.next || null;
+    params  = {};
+    onProgress?.({ phase: 'listing', albumsFound: albums.length });
+  }
+
+  // 2. Filter by sinceDate for incremental update
+  const filtered = sinceDate
+    ? albums.filter(a => normalizeDate(a.release_date) >= sinceDate)
+    : albums;
+
+  const total = filtered.length;
+  onProgress?.({ phase: 'albums', albumsDone: 0, albumsTotal: total, tracks: 0 });
+
+  // 3. Fetch tracks for each album
+  const raw = [];
+  for (let i = 0; i < filtered.length; i++) {
+    const album   = filtered[i];
+    const release = normalizeDate(album.release_date);
+    let tUrl      = `/albums/${album.id}/tracks`;
+    let tParams   = { limit: 50 };
+    while (tUrl) {
+      const d = await apiFetch(token, tUrl, tParams);
+      for (const t of d.items) {
+        raw.push({ _id: t.id, track_name: t.name, album_name: album.name, release_date: release, duration_ms: t.duration_ms, spotify_url: t.external_urls?.spotify || '' });
+      }
+      tUrl    = d.next || null;
+      tParams = {};
+    }
+    onProgress?.({ phase: 'albums', albumsDone: i + 1, albumsTotal: total, tracks: raw.length });
+  }
+
+  if (!raw.length) return [];
+
+  // 4. Fetch ISRC (best-effort batch)
+  onProgress?.({ phase: 'isrc', tracks: raw.length });
+  const full = {};
+  for (let i = 0; i < raw.length; i += 50) {
+    try {
+      const ids = raw.slice(i, i + 50).map(t => t._id).join(',');
+      const d   = await apiFetch(token, '/tracks', { ids });
+      for (const ft of d.tracks || []) {
+        if (ft) full[ft.id] = ft;
+      }
+    } catch { /* ISRC is best-effort; silently degrade */ }
+  }
+
+  // 5. Assemble final track objects
+  return raw.map(t => {
+    const ft = full[t._id] || {};
+    return {
+      track_name:  t.track_name,
+      artist_name: (ft.artists || []).map(a => a.name).join(', '),
+      album_name:  t.album_name,
+      release_date:t.release_date,
+      duration_ms: t.duration_ms,
+      isrc:        ft.external_ids?.isrc || '',
+      spotify_url: t.spotify_url,
+    };
+  });
+}
+
+/* ═══════════════════════════════════════════
+   Dedup & CSV
+═══════════════════════════════════════════ */
+function dedup(tracks) {
+  const map = new Map();
+  for (const t of tracks) {
+    const key = t.track_name.trim().toLowerCase();
+    const cur = map.get(key);
+    if (!cur || cur.release_date < t.release_date) map.set(key, t);
+  }
+  return [...map.values()].sort((a,b) => b.release_date.localeCompare(a.release_date));
+}
+
+function toCSV(tracks) {
+  const cols = ['track_name','artist_name','album_name','release_date','duration_ms','isrc','spotify_url'];
+  const cell = v => `"${String(v ?? '').replace(/"/g,'""')}"`;
+  return '﻿' + [cols.join(','), ...tracks.map(t => cols.map(c => cell(t[c])).join(','))].join('\r\n');
+}
+
+function downloadCSV(text, filename) {
+  const a = Object.assign(document.createElement('a'), {
+    href:     URL.createObjectURL(new Blob([text], { type: 'text/csv;charset=utf-8;' })),
+    download: filename,
+  });
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+/* ═══════════════════════════════════════════
+   Artist state (localStorage)
+═══════════════════════════════════════════ */
+function getAllArtistState()                    { return JSON.parse(localStorage.getItem(K_ARTISTS) || '{}'); }
+function getArtistState(id)                     { return getAllArtistState()[id] || {}; }
+function saveArtistState(id, name, tracks)      {
+  const all = getAllArtistState();
+  all[id]   = { name, lastFetchedAt: new Date().toISOString().slice(0,10), tracks };
+  localStorage.setItem(K_ARTISTS, JSON.stringify(all));
+}
+
+/* ═══════════════════════════════════════════
+   UI — Setup section
+═══════════════════════════════════════════ */
+function renderSetup(msg = '') {
+  const clientId = getClientId();
+  const loggedIn = isTokenValid() || !!getAuth();
+  const pip = document.getElementById('authPip');
+  const lbl = document.getElementById('authLabel');
+  const body = document.getElementById('setupBody');
+
+  if (!clientId) {
+    pip.className = 'pip';
+    lbl.textContent = 'NOT SET';
+    body.innerHTML = `
+      <div class="setup-body">
+        <p class="setup-hint">
+          在 <a href="https://developer.spotify.com/dashboard" target="_blank">Spotify Developer Dashboard</a>
+          建立一個 App，將 <code>http://127.0.0.1:8000</code> 加入 Redirect URI，再貼上 Client ID。
+        </p>
+        ${msg ? `<p class="inline-msg err">${esc(msg)}</p>` : ''}
+        <div class="field">
+          <div class="field-label">Client ID</div>
+          <input type="text" id="clientIdInput" placeholder="從 Spotify Dashboard 複製">
+        </div>
+        <button class="btn sm" onclick="saveClientId()">Save</button>
+      </div>`;
+  } else if (!loggedIn) {
+    pip.className = 'pip on';
+    lbl.textContent = 'LOGIN REQUIRED';
+    body.innerHTML = `
+      <div class="setup-body">
+        ${msg ? `<p class="inline-msg err">${esc(msg)}</p>` : ''}
+        <div class="btn-row">
+          <button class="btn" onclick="redirectToAuth()">Login with Spotify</button>
+          <button class="logout-link" onclick="resetClientId()">Change Client ID</button>
+        </div>
+      </div>`;
+  } else {
+    pip.className = 'pip ok';
+    lbl.textContent = 'ACTIVE';
+    body.innerHTML = `
+      <div class="btn-row">
+        <button class="btn ghost sm" onclick="logout()">Logout</button>
+        <button class="logout-link" onclick="resetClientId()">Change Client ID</button>
+      </div>`;
+    setStamp('AUTH\nOK');
+  }
+}
+
+function saveClientId() {
+  const val = document.getElementById('clientIdInput')?.value.trim();
+  if (!val) return;
+  setClientId(val);
+  renderSetup();
+}
+
+function resetClientId() {
+  clearAuth();
+  localStorage.removeItem(K_CLIENT_ID);
+  renderSetup();
+}
+
+/* ═══════════════════════════════════════════
+   UI — Search & artist list
+═══════════════════════════════════════════ */
 function extractArtistId(input) {
-  // https://open.spotify.com/artist/4tZwfgrHOc3mvqYlEYSvVi?si=...
   const m = input.match(/open\.spotify\.com\/artist\/([A-Za-z0-9]+)/);
   return m ? m[1] : null;
 }
@@ -496,36 +603,24 @@ async function doSearch() {
   const btn = document.getElementById('searchBtn');
   btn.disabled = true;
 
-  const artistId = extractArtistId(raw);
-  if (artistId) {
-    renderMsg('<span class="sp-wrap"><span class="sp"></span>Resolving artist…</span>', '');
-    try {
-      const r = await fetch(`/resolve/${artistId}`);
-      if (r.status === 401) { renderMsg('Set credentials first', 'err'); return; }
-      if (!r.ok) { renderMsg('找不到該藝人，請確認連結是否正確', 'err'); return; }
-      renderArtists([await r.json()]);
-    } catch { renderMsg('Network error', 'err'); }
-    finally { btn.disabled = false; }
-    return;
-  }
+  let token;
+  try { token = await getToken(); }
+  catch (e) { renderMsg(e.message, 'err'); renderSetup(); btn.disabled = false; return; }
 
+  const artistId = extractArtistId(raw);
   renderMsg('<span class="sp-wrap"><span class="sp"></span>Searching…</span>', '');
   try {
-    const r = await fetch('/search?q=' + encodeURIComponent(raw));
-    if (r.status === 401) { renderMsg('Set credentials first', 'err'); return; }
-    if (!r.ok) {
-      const e = await r.json().catch(() => ({}));
-      renderMsg('Search error: ' + (e.detail || r.status), 'err');
-      return;
-    }
-    renderArtists(await r.json());
-  } catch { renderMsg('Network error — is the server running?', 'err'); }
-  finally { btn.disabled = false; }
+    const results = artistId
+      ? [await resolveArtist(token, artistId)]
+      : await searchArtist(token, raw);
+    renderArtists(results);
+  } catch (e) {
+    renderMsg(e.message, 'err');
+  } finally { btn.disabled = false; }
 }
 
-function renderMsg(html, cls) {
-  document.getElementById('artistList').innerHTML =
-    `<div class="inline-msg ${cls}">${html}</div>`;
+function renderMsg(html, cls = '') {
+  document.getElementById('artistList').innerHTML = `<div class="inline-msg ${cls}">${html}</div>`;
 }
 
 function renderArtists(list) {
@@ -538,9 +633,7 @@ function renderArtists(list) {
     row.dataset.id = a.id;
     row.innerHTML = `
       <span class="a-idx">${pad(i+1)}</span>
-      ${a.image
-        ? `<img class="a-img" src="${a.image}" alt="">`
-        : `<div class="a-av">♪</div>`}
+      ${a.image ? `<img class="a-img" src="${a.image}" alt="">` : `<div class="a-av">♪</div>`}
       <span class="a-name">${esc(a.name)}</span>
       <span class="a-uri">${a.id}</span>`;
     row.addEventListener('click', () => selectArtist(a));
@@ -548,156 +641,143 @@ function renderArtists(list) {
   });
 }
 
-/* ── Artist selection ────────────────── */
-async function selectArtist(artist) {
-  sel = artist;
-  document.querySelectorAll('.a-row').forEach(r =>
-    r.classList.toggle('sel', r.dataset.id === artist.id)
-  );
+/* ═══════════════════════════════════════════
+   UI — Collect section
+═══════════════════════════════════════════ */
+let selArtist = null;
+
+function selectArtist(artist) {
+  selArtist = artist;
+  document.querySelectorAll('.a-row').forEach(r => r.classList.toggle('sel', r.dataset.id === artist.id));
   document.getElementById('selName').textContent = artist.name;
   document.getElementById('actionSection').className = 'show';
   clearStatus();
-  await refreshMeta();
+  refreshSelMeta();
 }
 
-async function refreshMeta() {
-  if (!sel) return;
-  try {
-    const r = await fetch(`/artist/${sel.id}/status`);
-    if (!r.ok) return;
-    const s = await r.json();
-    const meta = document.getElementById('selMeta');
-    const upd  = document.getElementById('updateBtn');
-    if (s.last_fetched_at) {
-      meta.textContent = `Last archive: ${s.last_fetched_at} · ${s.track_count} tracks`;
-      upd.disabled = false;
-      setStamp(`${s.track_count}\nTRACKS`);
-    } else {
-      meta.textContent = 'Not yet archived';
-      upd.disabled = true;
-      setStamp('NOT\nARCHIVED');
-    }
-  } catch { /* ignore */ }
-}
-
-/* ── Collect ─────────────────────────── */
-async function doFetch()  { await run('/fetch'); }
-async function doUpdate() { await run('/update'); }
-
-async function run(ep) {
-  if (!sel) return;
-  const fb = document.getElementById('fetchBtn');
-  const ub = document.getElementById('updateBtn');
-  fb.disabled = ub.disabled = true;
-  setStatus('Connecting…', 'load');
-  setStamp('WORK\nING…');
-
-  const startMs = Date.now();
-  let pollTimer = setInterval(async () => {
-    try {
-      const pr = await fetch(`/fetch-progress/${sel.id}`);
-      if (!pr.ok) return;
-      const p = await pr.json();
-      if (!p || !p.phase) return;
-
-      if (p.phase === 'listing') {
-        const found = p.albums_found || 0;
-        setStatus(`Fetching release list… (${found} found)`, 'load');
-        setStamp(`${found}\nFOUND`);
-        return;
-      }
-
-      if (p.phase === 'albums' && !p.albums_total) {
-        setStatus('Preparing…', 'load');
-        return;
-      }
-
-      const done = p.albums_done || 0;
-      const total = p.albums_total || 0;
-      const tracks = p.tracks || 0;
-
-      let line = '';
-      if (p.phase === 'isrc') {
-        line = `Albums: ${total}/${total} · Tracks: ${tracks} · Fetching details…`;
-      } else {
-        line = `Albums: ${done}/${total} · Tracks: ${tracks}`;
-        if (done > 0 && done < total) {
-          const elapsed = Date.now() - startMs;
-          const remaining = Math.round((elapsed / done) * (total - done) / 1000);
-          line += ` · ~${remaining}s left`;
-        }
-      }
-      setStatus(line, 'load');
-      setStamp(`${done}/${total}\nALBUMS`);
-    } catch { /* ignore poll errors */ }
-  }, 1000);
-
-  try {
-    const r = await fetch(ep, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ artist_id: sel.id, artist_name: sel.name }),
-    });
-    clearInterval(pollTimer);
-    if (!r.ok) {
-      const e = await r.json().catch(() => ({}));
-      setStatus('Error: ' + (e.detail || 'Unknown error — check server logs'), 'err');
-      setStamp('ERR\n✕');
-      return;
-    }
-    const total = r.headers.get('X-Track-Count');
-    const added = r.headers.get('X-New-Count');
-    const blob  = await r.blob();
-    triggerDownload(blob, `${sel.name}_all_tracks.csv`);
-
-    let msg = `↓  ${total} tracks archived`;
-    if (added !== null) msg += `  ·  ${added} new`;
-    setStatus(msg, 'ok');
-    await refreshMeta();
-  } catch {
-    clearInterval(pollTimer);
-    setStatus('Network error — is the server running?', 'err');
-    setStamp('ERR\n✕');
-  } finally {
-    clearInterval(pollTimer);
-    fb.disabled = false;
-    await refreshMeta();
+function refreshSelMeta() {
+  if (!selArtist) return;
+  const s   = getArtistState(selArtist.id);
+  const meta = document.getElementById('selMeta');
+  const upd  = document.getElementById('updateBtn');
+  if (s.lastFetchedAt) {
+    meta.textContent = `Last archive: ${s.lastFetchedAt} · ${s.tracks?.length ?? 0} tracks`;
+    upd.disabled = false;
+    setStamp(`${s.tracks?.length ?? 0}\nTRACKS`);
+  } else {
+    meta.textContent = 'Not yet archived';
+    upd.disabled = true;
+    setStamp('NOT\nARCHIVED');
   }
 }
 
-function triggerDownload(blob, filename) {
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(url);
+async function doFetch()  { await run(null); }
+async function doUpdate() {
+  const s = getArtistState(selArtist.id);
+  await run(s.lastFetchedAt || null);
 }
 
-/* ── Status ──────────────────────────── */
-function setStatus(txt, cls) {
+async function run(sinceDate) {
+  if (!selArtist) return;
+  const fb = document.getElementById('fetchBtn');
+  const ub = document.getElementById('updateBtn');
+  fb.disabled = ub.disabled = true;
+  const startMs = Date.now();
+
+  let token;
+  try { token = await getToken(); }
+  catch (e) { setStatus(e.message, 'err'); renderSetup(); fb.disabled = false; return; }
+
+  setStatus('<span class="sp-wrap"><span class="sp"></span>Connecting…</span>', 'load');
+  setStamp('WORK\nING…');
+
+  try {
+    const newTracks = await getAllTracks(token, selArtist.id, p => {
+      if (p.phase === 'listing') {
+        setStatus(`<span class="sp-wrap"><span class="sp"></span>Fetching release list… (${p.albumsFound} found)</span>`, 'load');
+        setStamp(`${p.albumsFound}\nFOUND`);
+      } else if (p.phase === 'albums') {
+        const done = p.albumsDone, total = p.albumsTotal;
+        let line = `Albums: ${done}/${total} · Tracks: ${p.tracks}`;
+        if (done > 0 && done < total) {
+          const elapsed = Date.now() - startMs;
+          const rem = Math.round(elapsed / done * (total - done) / 1000);
+          line += ` · ~${rem}s left`;
+        }
+        setStatus(`<span class="sp-wrap"><span class="sp"></span>${line}</span>`, 'load');
+        setStamp(`${done}/${total}\nALBUMS`);
+      } else if (p.phase === 'isrc') {
+        setStatus(`<span class="sp-wrap"><span class="sp"></span>Fetching track details… (${p.tracks} tracks)</span>`, 'load');
+      }
+    }, sinceDate);
+
+    // Merge with stored tracks when updating
+    const stored = sinceDate ? (getArtistState(selArtist.id).tracks || []) : [];
+    const merged = dedup([...stored, ...newTracks]);
+    saveArtistState(selArtist.id, selArtist.name, merged);
+
+    downloadCSV(toCSV(merged), `${selArtist.name}_all_tracks.csv`);
+
+    const msg = sinceDate
+      ? `↓ ${merged.length} tracks total · ${newTracks.length} new`
+      : `↓ ${merged.length} tracks archived`;
+    setStatus(msg, 'ok');
+    setStamp(`${merged.length}\nTRACKS`);
+    refreshSelMeta();
+  } catch (e) {
+    setStatus(e.message, 'err');
+    setStamp('ERR\n✕');
+  } finally {
+    fb.disabled = false;
+    refreshSelMeta();
+  }
+}
+
+/* ═══════════════════════════════════════════
+   UI — helpers
+═══════════════════════════════════════════ */
+function setStatus(html, cls) {
   const el = document.getElementById('statusMsg');
   el.className = 'status ' + cls;
-  el.innerHTML = cls === 'load'
-    ? `<span class="sp-wrap"><span class="sp"></span>${txt}</span>`
-    : txt;
+  el.innerHTML = html;
 }
 function clearStatus() {
   const el = document.getElementById('statusMsg');
   el.className = 'status';
   el.innerHTML = '';
 }
+function setStamp(txt) {
+  document.getElementById('headerStamp').innerHTML = 'Status<br>—<br>' + txt.replace('\n','<br>');
+}
 
-/* ── Utilities ───────────────────────── */
-function esc(s) {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+/* ═══════════════════════════════════════════
+   Init
+═══════════════════════════════════════════ */
+async function init() {
+  const params   = new URLSearchParams(window.location.search);
+  const code     = params.get('code');
+  const error    = params.get('error');
+  const state    = params.get('state');
+
+  // Clean URL immediately so refresh doesn't re-trigger
+  if (code || error) history.replaceState({}, '', '/');
+
+  if (error) {
+    renderSetup('Spotify login cancelled or denied.');
+    return;
+  }
+
+  if (code && getClientId()) {
+    try {
+      await handleCallback(code, state);
+    } catch (e) {
+      renderSetup(e.message);
+      return;
+    }
+  }
+
+  renderSetup();
 }
-function fmt(n) {
-  if (n >= 1e6) return (n/1e6).toFixed(1) + 'M';
-  if (n >= 1e3) return Math.round(n/1e3) + 'K';
-  return n;
-}
-function pad(n) { return String(n).padStart(2, '0'); }
 
 init();
 </script>
