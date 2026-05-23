@@ -4,7 +4,11 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 
+from mock_spotify import router as mock_router
+
 app = FastAPI()
+app.include_router(mock_router)
+
 _html = Path(__file__).parent.parent / "frontend" / "index.html"
 
 

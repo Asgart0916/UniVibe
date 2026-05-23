@@ -242,6 +242,7 @@ input::placeholder { color: var(--paper-3); }
 /* ═══════════════════════════════════════════
    Constants
 ═══════════════════════════════════════════ */
+const USE_MOCK       = false;  // true → routes to /mock/spotify/v1 on this server
 const REDIRECT_URI   = window.location.origin;
 const RL_INTERVAL_MS = 200;
 const RL_ABORT_SECS  = 300;
@@ -376,7 +377,11 @@ function logout() {
 let _rlLast = 0;
 
 async function apiFetch(token, urlOrPath, params = {}) {
-  const url = new URL(urlOrPath.startsWith('https://') ? urlOrPath : `https://api.spotify.com/v1${urlOrPath}`);
+  const isAbsolute = urlOrPath.startsWith('http://') || urlOrPath.startsWith('https://');
+  const base = USE_MOCK
+    ? `${window.location.origin}/mock/spotify/v1`
+    : 'https://api.spotify.com/v1';
+  const url = new URL(isAbsolute ? urlOrPath : `${base}${urlOrPath}`);
   Object.entries(params).forEach(([k,v]) => url.searchParams.set(k,v));
 
   for (let i = 0; i < RL_MAX_RETRIES; i++) {
@@ -384,10 +389,15 @@ async function apiFetch(token, urlOrPath, params = {}) {
     if (wait > 0) await sleep(wait);
     _rlLast = Date.now();
 
+    const t0 = Date.now();
+    console.log(`[api] ${new Date().toISOString()} ${url.pathname}${url.search}`);
     const resp = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+    console.log(`[api] → ${resp.status} (${Date.now() - t0}ms)`);
 
     if (resp.status === 429) {
-      const after = parseInt(resp.headers.get('Retry-After') || '5');
+      const retryAfter = resp.headers.get('Retry-After');
+      const after = parseInt(retryAfter ?? '5');
+      console.warn(`[api] 429 rate-limit — Retry-After: ${retryAfter ?? 'absent'}, waiting ${after}s`);
       if (after > RL_ABORT_SECS) throw new Error(`Spotify rate limit（${after}s / ${(after/3600).toFixed(1)}h）— 請稍後再試`);
       await sleep(after * 1000);
       continue;
