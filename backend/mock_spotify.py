@@ -4,7 +4,7 @@ Activate by setting USE_MOCK = true in frontend/index.html.
 All endpoints return minimal fixture data; shape matches real Spotify responses.
 """
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 
 router = APIRouter(prefix="/mock/spotify/v1")
 
@@ -66,16 +66,17 @@ def mock_artist(artist_id: str):
 
 
 @router.get("/artists/{artist_id}/albums")
-def mock_artist_albums(artist_id: str, include_groups: str = "", limit: int = 10, offset: int = 0):
+def mock_artist_albums(request: Request, artist_id: str, include_groups: str = "", limit: int = 10, offset: int = 0):
     page = _ALBUMS[offset : offset + limit]
     has_next = offset + limit < len(_ALBUMS)
+    base = str(request.base_url).rstrip("/")
     return {
         "items": page,
         "total": len(_ALBUMS),
         "limit": limit,
         "offset": offset,
         "next": (
-            f"http://localhost:8000/mock/spotify/v1/artists/{artist_id}/albums"
+            f"{base}/mock/spotify/v1/artists/{artist_id}/albums"
             f"?limit={limit}&offset={offset + limit}"
             if has_next
             else None
@@ -84,17 +85,18 @@ def mock_artist_albums(artist_id: str, include_groups: str = "", limit: int = 10
 
 
 @router.get("/albums/{album_id}/tracks")
-def mock_album_tracks(album_id: str, limit: int = 50, offset: int = 0):
+def mock_album_tracks(request: Request, album_id: str, limit: int = 50, offset: int = 0):
     tracks = _ALBUM_TRACKS.get(album_id, [])
     page = tracks[offset : offset + limit]
     has_next = offset + limit < len(tracks)
+    base = str(request.base_url).rstrip("/")
     return {
         "items": page,
         "total": len(tracks),
         "limit": limit,
         "offset": offset,
         "next": (
-            f"http://localhost:8000/mock/spotify/v1/albums/{album_id}/tracks"
+            f"{base}/mock/spotify/v1/albums/{album_id}/tracks"
             f"?limit={limit}&offset={offset + limit}"
             if has_next
             else None
