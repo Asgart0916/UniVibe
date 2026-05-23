@@ -245,8 +245,6 @@ input::placeholder { color: var(--paper-3); }
 const USE_MOCK       = false;  // true → routes to /mock/spotify/v1 on this server
 const REDIRECT_URI   = window.location.origin;
 const RL_INTERVAL_MS = 200;
-const RL_ABORT_SECS  = 300;
-const RL_MAX_RETRIES = 8;
 
 const K_CLIENT_ID = 'uv_client_id';
 const K_AUTH      = 'uv_auth';       // { access_token, refresh_token, expires_at }
@@ -384,28 +382,23 @@ async function apiFetch(token, urlOrPath, params = {}) {
   const url = new URL(isAbsolute ? urlOrPath : `${base}${urlOrPath}`);
   Object.entries(params).forEach(([k,v]) => url.searchParams.set(k,v));
 
-  for (let i = 0; i < RL_MAX_RETRIES; i++) {
-    const wait = RL_INTERVAL_MS - (Date.now() - _rlLast);
-    if (wait > 0) await sleep(wait);
-    _rlLast = Date.now();
+  const wait = RL_INTERVAL_MS - (Date.now() - _rlLast);
+  if (wait > 0) await sleep(wait);
+  _rlLast = Date.now();
 
-    const t0 = Date.now();
-    console.log(`[api] ${new Date().toISOString()} ${url.pathname}${url.search}`);
-    const resp = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
-    console.log(`[api] → ${resp.status} (${Date.now() - t0}ms)`);
+  const t0 = Date.now();
+  console.log(`[api] ${new Date().toISOString()} ${url.pathname}${url.search}`);
+  const resp = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+  console.log(`[api] → ${resp.status} (${Date.now() - t0}ms)`);
 
-    if (resp.status === 429) {
-      const retryAfter = resp.headers.get('Retry-After');
-      const after = parseInt(retryAfter ?? '5');
-      console.warn(`[api] 429 rate-limit — Retry-After: ${retryAfter ?? 'absent'}, waiting ${after}s`);
-      if (after > RL_ABORT_SECS) throw new Error(`Spotify rate limit（${after}s / ${(after/3600).toFixed(1)}h）— 請稍後再試`);
-      await sleep(after * 1000);
-      continue;
-    }
-    if (!resp.ok) throw new Error(`Spotify API ${resp.status}: ${urlOrPath}`);
-    return resp.json();
+  if (resp.status === 429) {
+    const retryAfter = resp.headers.get('Retry-After');
+    const after = parseInt(retryAfter ?? '5');
+    console.warn(`[api] 429 rate-limit — Retry-After: ${retryAfter ?? 'absent'}`);
+    throw new Error(`Rate limit — 請等 ${after}s 後手動重試`);
   }
-  throw new Error('Max retries exceeded');
+  if (!resp.ok) throw new Error(`Spotify API ${resp.status}: ${urlOrPath}`);
+  return resp.json();
 }
 
 async function searchArtist(token, query) {
