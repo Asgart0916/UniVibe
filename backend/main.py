@@ -11,6 +11,10 @@ app.include_router(mock_router)
 
 _html = Path(__file__).parent.parent / "frontend" / "index.html"
 
+_root = Path(__file__).parent.parent
+_CERT = _root / "127.0.0.1.pem"
+_KEY  = _root / "127.0.0.1-key.pem"
+
 
 @app.get("/{full_path:path}", response_class=HTMLResponse)
 def index(full_path: str = ""):
@@ -18,4 +22,7 @@ def index(full_path: str = ""):
 
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=False)
+    cert = str(_CERT) if _CERT.exists() and _KEY.exists() else None
+    key  = str(_KEY)  if cert else None
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=False,
+                ssl_certfile=cert, ssl_keyfile=key)
