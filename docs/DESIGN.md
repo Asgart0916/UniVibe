@@ -3,31 +3,30 @@
 ## Architecture
 
 ```
-browser
-  └─ GET /            → serves frontend/index.html
-  └─ POST /config     → validates + saves Spotify credentials
-  └─ GET  /search     → artist search
-  └─ GET  /resolve/:id → artist lookup by Spotify URL
-  └─ POST /fetch      → full track fetch (blocking, streams CSV response)
-  └─ POST /update     → incremental fetch since last_fetched_at
-  └─ GET  /fetch-progress/:id → in-memory progress dict (polled every 1s)
-  └─ GET  /artist/:id/status  → last_fetched_at + track_count from state.json
+browser (index.html — all business logic lives here)
+  ├─ Spotify PKCE OAuth  → https://accounts.spotify.com  (direct)
+  ├─ Spotify API calls   → https://api.spotify.com/v1    (direct, bearer token)
+  └─ GET /               → served by FastAPI backend
 
 backend/
-  main.py      FastAPI app + route handlers
-  spotify.py   Spotify Web API client (token, search, fetch)
-  dedup.py     Deduplication logic + CSV serialisation
-  state.py     JSON persistence (~/.univibe/state.json)
+  main.py           FastAPI: serves index.html + mounts mock router
+  mock_spotify.py   Local mock for /mock/spotify/v1/* (dev only, USE_MOCK=true)
 ```
 
-## Module Responsibilities
+All Spotify API calls are made directly from the browser (no backend proxy).
+The backend exists solely to serve the static HTML and provide the dev mock.
 
-| Module | Responsibility | Side effects |
-|---|---|---|
-| `spotify.py` | All Spotify API calls; token caching; rate-limit handling | Mutates `_token_cache` (module global) |
-| `dedup.py` | Pure functions; dedup by name, CSV output | None |
-| `state.py` | Read/write `~/.univibe/state.json` thread-safely | Writes to filesystem |
-| `main.py` | HTTP routing; in-memory progress state; response shaping | Mutates `_progress` (module global, guarded by `_progress_lock`) |
+## Distribution
+
+Built via PyInstaller (`univibe.spec`) into a single `dist/UniVibe.exe`.
+- No SSL cert bundled → runs on `http://127.0.0.1:8000`
+- Auto-opens browser on launch; close the console window to stop the server
+- Build: `.\build.ps1`
+
+Spotify redirect URI requirements (confirmed 2026-05-24):
+- `http://127.0.0.1` is explicitly allowed as a loopback exception (HTTPS not required)
+- `localhost` hostname is banned; must use `127.0.0.1` IP
+- Reference: https://developer.spotify.com/blog/2025-02-12-increasing-the-security-requirements-for-integrating-with-spotify
 
 ## Spotify Dev Mode Constraints
 
@@ -68,8 +67,8 @@ local single-user tool; document clearly and do not deploy on shared servers.
 
 ## Known Issues / Future Work
 
-- `save_artist_tracks` acquires `_state_lock` for the full read-modify-write cycle,
-  preventing concurrent writes from corrupting the file. However, the file is not
-  written atomically (no temp-file rename), so a crash mid-write can corrupt state.
-- PyInstaller packaging (`sys._MEIPASS` path detection) is implemented but untested.
 - No integration tests covering the full fetch→dedup→CSV pipeline.
+- **[Future] Playlist import**: Export collected track list directly as a Spotify playlist
+  via `POST /v1/playlists/{id}/tracks`. Requires upgrading to user-level OAuth
+  (currently client credentials only); would need a new OAuth scope (`playlist-modify-public`
+  or `playlist-modify-private`) and a playlist creation step in the UI.
